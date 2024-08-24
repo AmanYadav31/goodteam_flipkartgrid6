@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Size Selector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+     /* background-image: url('https://cdn.pixabay.com/photo/2023/02/16/07/10/t-shirt-7798287_1280.jpg');*/
+      background-size: cover;
+      /* Ensure the background covers the entire page */
+      background-position: center;
+      /* Center the background image */
+      background-color: rgb(147, 147, 144);
+      margin: 0;
+      padding: 20px;
+      background-image: url("https://drive.google.com/file/d/1xFvccUhuCYXGjfizxpA2zWXr0QWFP_Qq/view?usp=sharing");
+    }
+
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .selectors {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    #size-selector,
+    #country-selector,
+    #gender-selector {
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .clothing-row {
+      margin-bottom: 30px;
+
+
+    }
+
+    .row-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .clothing-row-items {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      /* For Firefox */
+    }
+
+    .clothing-row-items::-webkit-scrollbar {
+      display: none;
+      /* For Chrome, Safari, and newer Edge */
+    }
+
+    .clothing-item {
+      flex: 0 0 auto;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      width: 200px;
+      background-image: url("https://drive.google.com/file/d/1xFvccUhuCYXGjfizxpA2zWXr0QWFP_Qq/view?usp=sharing");
+
+
+
+    }
+
+    .clothing-item img {
+      max-width: 100%;
+      border-radius: 8px;
+      height: 200px;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      /* Added border */
+      transition: transform 0.2s ease-in-out;
+      /* Added transition */
+    }
+
+    .clothing-item img:hover {
+      transform: scale(1.1);
+      /* Added hover effect */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Select Your Preferences</h1>
+    <div class="selectors">
+      <select id="gender-selector" onchange="loadClothingItems()">
+        <option value="all">Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <select id="size-selector" onchange="loadClothingItems()">
+        <option value="<%= size %>"><%= size %></option>
+        <option value="<%= size %>"><%= size %></option>
+        <option value="<%= size %>"><%= size %></option>
+        <option value="<%= size %>"><%= size %></option>
+       
+      </select>
+
+      <select id="country-selector" onchange="showCountryChart()">
+        <option value="us">United States</option>
+        <option value="uk">United Kingdom</option>
+        <option value="in">India</option>
+        <option value="ca">Canada</option>
+        <option value="au">Australia</option>
+      </select>
+    </div>
+
+    <div id="us-chart" class="size-chart">
+      <h2>United States Size Chart</h2>
+      <p>[Insert US size chart here]</p>
+    </div>
+
+    <div id="uk-chart" class="size-chart">
+      <h2>United Kingdom Size Chart</h2>
+      <p>[Insert UK size chart here]</p>
+    </div>
+
+    <div id="in-chart" class="size-chart">
+      <h2>India Size Chart</h2>
+      <p>[Insert India size chart here]</p>
+    </div>
+
+    <div id="ca-chart" class="size-chart">
+      <h2>Canada Size Chart</h2>
+      <p>[Insert Canada size chart here]</p>
+    </div>
+
+    <div id="au-chart" class="size-chart">
+      <h2>Australia Size Chart</h2>
+      <p>[Insert Australia size chart here]</p>
+    </div>
+
+
+    <!-- T-shirts Row -->
+    <div class="clothing-row">
+      <div class="row-title">Tops</div>
+      <div class="clothing-row-items" id="tshirts-row">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Pants Row -->
+    <div class="clothing-row">
+      <div class="row-title">Bottoms</div>
+      <div class="clothing-row-items" id="pants-row">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Jackets Row -->
+    <div class="clothing-row">
+      <div class="row-title">Dresses</div>
+      <div class="clothing-row-items" id="jackets-row">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+function showCountryChart() {
+      // Hide all charts first
+      var selectedCountry = document.getElementById('country-selector').value;
+
+      // Hide all charts first
+      var charts = document.querySelectorAll('.size-chart');
+      charts.forEach(chart => {
+        chart.style.display = 'none';
+      });
+
+      // Show the selected country's chart if a valid country is selected
+      if (selectedCountry) {
+        var chartToShow = document.getElementById(selectedCountry + '-chart');
+        if (chartToShow) {
+          chartToShow.style.display = 'block';
+        }
+      }
+    
+  }
+
+    function loadClothingItems() {
+      const selectedSize = document.getElementById("size-selector").value;
+      const selectedGender = document.getElementById("gender-selector").value;
+      const tshirtsRow = document.getElementById("tshirts-row");
+      const pantsRow = document.getElementById("pants-row");
+      const jacketsRow = document.getElementById("jackets-row");
+
+      // Clear existing content
+      tshirtsRow.innerHTML = "";
+      pantsRow.innerHTML = "";
+      jacketsRow.innerHTML = "";
+
+      // Load t-shirts based on size and gender
+      const Tops = [
+        {
+          src: "/images/tops/small/tops_small/attractive-young-lady-holding-hands-waist-blouse-looking-jolly-front-view.jpg",
+          alt: `T-shirt ${selectedSize} 1`,
+          gender: "female",
+          size: "S"
+        },
+        {
+          src: "/images/tops/small/tops_small/girl-with-pink-skateboard-sunglasses.jpg",
+          alt: `T-shirt ${selectedSize} 2`,
+          gender: "female",
+          size: "S"
+
+        },
+        {
+          src: "/images/tops/small/tops_small/pexels-blue-bird-7210300.jpg",
+          alt: `T-shirt ${selectedSize} 3`,
+          gender: "female",
+          size: "S"
+
+        },
+        {
+          src: "/images/tops/small/tops_small/pexels-sam-lion-5732521.jpg",
+          alt: `T-shirt ${selectedSize} 4`,
+          gender: "male",
+          size: "S"
+
+        },
+
+        {
+          src: "/images/tops/small/tops_small/pexels-uriel-venegas-176524868-15013255.jpg",
+          alt: `T-shirt ${selectedSize} 5`,
+          gender: "female",
+          size: "S"
+
+        },
+
+        {
+          src: "/images/tops/small/tops_small/young-teenage-girl-recording-reels-herself-outdoors-social-media.jpg",
+          alt: `T-shirt ${selectedSize} 6`,
+          gender: "female",
+          size: "S"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/boy-466143.jpg",
+          alt: `T-shirt ${selectedSize} 6`,
+          gender: "male",
+          size: "S"
+
+        },
+
+       
+
+        {
+          src: "/images/tops/medium/tops_medium/ai-generated-8786359.jpg",
+          alt: `T-shirt ${selectedSize} 7`,
+          gender: "male",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/fashion-4824124.jpg",
+          alt: `T-shirt ${selectedSize} 8`,
+          gender: "male",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/man-4398724.jpg",
+          alt: `T-shirt ${selectedSize} 9`,
+          gender: "male",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/people-6889599.jpg",
+          alt: `T-shirt ${selectedSize} 10`,
+          gender: "male",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-3567600.jpg",
+          alt: `T-shirt ${selectedSize} 11`,
+          gender: "female",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-4390055.jpg",
+          alt: `T-shirt ${selectedSize} 12`,
+          gender: "female",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-5440737.jpg",
+          alt: `T-shirt ${selectedSize} 13`,
+          gender: "female",
+          size: "M"
+
+        },
+
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-6962720.jpg",
+          alt: `T-shirt ${selectedSize} 14`,
+          gender: "female",
+          size: "M"
+
+        },
+
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-7357931.jpg",
+          alt: `T-shirt ${selectedSize} 15`,
+          gender: "female",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/women-8318437.jpg",
+          alt: `T-shirt ${selectedSize} 16`,
+          gender: "female",
+          size: "M"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/ai-generated-8786359.jpg",
+          alt: `T-shirt ${selectedSize} 17`,
+          gender: "male",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/fashion-4824124.jpg",
+          alt: `T-shirt ${selectedSize} 18`,
+          gender: "male",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/man-4398724.jpg",
+          alt: `T-shirt ${selectedSize} 19`,
+          gender: "male",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/people-6889599.jpg",
+          alt: `T-shirt ${selectedSize} 20`,
+          gender: "male",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-3567600.jpg",
+          alt: `T-shirt ${selectedSize} 21`,
+          gender: "female",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-4390055.jpg",
+          alt: `T-shirt ${selectedSize} 22`,
+          gender: "female",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-5440737.jpg",
+          alt: `T-shirt ${selectedSize} 23`,
+          gender: "female",
+          size: "L"
+
+        },
+
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-6962720.jpg",
+          alt: `T-shirt ${selectedSize} 24`,
+          gender: "female",
+          size: "L"
+
+        },
+
+
+        {
+          src: "/images/tops/medium/tops_medium/woman-7357931.jpg",
+          alt: `T-shirt ${selectedSize} 25`,
+          gender: "female",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/medium/tops_medium/women-8318437.jpg",
+          alt: `T-shirt ${selectedSize} 26`,
+          gender: "female",
+          size: "L"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/clothes-1480150.jpg",
+          alt: `T-shirt ${selectedSize} 27`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/clothes-1480151.jpg",
+          alt: `T-shirt ${selectedSize} 28`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/clothes-1480155.jpg",
+          alt: `T-shirt ${selectedSize} 29`,
+          gender: "female",
+          size: "XL"
+
+        },
+         
+        {
+          src: "/images/tops/xl/tops_xl/plus-2450025.jpg",
+          alt: `T-shirt ${selectedSize} 30`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/woman-977980.jpg",
+          alt: `T-shirt ${selectedSize} 31`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/woman-1555767.jpg",
+          alt: `T-shirt ${selectedSize} 32`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+        {
+          src: "/images/tops/xl/tops_xl/woman-7758781.jpg",
+          alt: `T-shirt ${selectedSize} 33`,
+          gender: "female",
+          size: "XL"
+
+        },
+       
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-rdne-7240261.jpg",
+          alt: `T-shirt ${selectedSize} 34`,
+          gender: "female",
+          size: "XL"
+
+        },
+     
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-roberto-hund-5317548.jpg",
+          alt: `T-shirt ${selectedSize} 34`,
+          gender: "female",
+          size: "XL"
+
+        },
+
+
+
+       
+
+
+
+        
+
+
+
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/02/16/07/10/t-shirt-7798287_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 7`,
+        //   gender: "female",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/01/29/16/34/t-shirt-7746260_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 8`,
+        //   gender: "female",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/06/05/00/20/t-shirt-8333837_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 9`,
+        //   gender: "all",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/04/22/14/16/t-shirt-7922038_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 10`,
+        //   gender: "female",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/07/01/00/22/t-shirt-8507558_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 11`,
+        //   gender: "male",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/08/12/14/00/t-shirt-8637406_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 12`,
+        //   gender: "all",
+        //   size: "M"
+
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/09/10/11/45/t-shirt-8768742_1280.jpg",
+        //   alt: `T-shirt ${selectedSize} 13`,
+        //   gender: "female",
+        //   size: "M"
+
+        // },
+
+      ];
+      Tops
+        .filter(
+          (item) => selectedGender === "all" || (item.gender === selectedGender && item.size === selectedSize)
+        )
+        .forEach((item) => {
+          tshirtsRow.innerHTML += `<div class="clothing-item"><img src="${item.src}" alt="${item.alt}"><p>${item.alt}</p></div>`;
+        });
+
+      // Load pants based on size and gender
+      const Bottoms = [
+        // {
+        //   src: "/images/tops/small/tops_small/attractive-young-lady-holding-hands-waist-blouse-looking-jolly-front-view.jpg",
+        //   alt: `Pants ${selectedSize} 1`,
+        //   gender: "all",
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/05/08/21/59/tshirt-7979851_1280.jpg",
+        //   alt: `Pants ${selectedSize} 2`,
+        //   gender: "male",
+        // },
+        
+        // {
+        //   src: "/images/bottoms/small/bottom_small/clothesline-804812.jpg",
+        //   alt: `Pants ${selectedSize} 3`,
+        //   gender: "female",
+        //   size:"S",
+
+        // },
+
+        // {
+        //   src: "/images/bottoms/small/bottom_small/girl-1039729.jpg",
+        //   alt: `Pants ${selectedSize} 4`,
+        //   gender: "female",
+        //   size:"S",
+
+        // },
+
+        {
+          src: "/images/bottoms/small/bottom_small/kid-6565461.jpg",
+          alt: `Pants ${selectedSize} 1`,
+          gender: "female",
+          size:"S",
+
+        },
+
+        {
+          src: "/images/bottoms/small/bottom_small/young-698514_1280.jpg",
+          alt: `Pants ${selectedSize} 2`,
+          gender: "female",
+          size:"S",
+
+        },
+
+        
+        {
+          src: "/images/bottoms/medium/bottom_medium/clothes-1838144.jpg",
+          alt: `Pants ${selectedSize} 3`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/leg-2405061.jpg",
+          alt: `Pants ${selectedSize} 4`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        
+        {
+          src: "/images/bottoms/medium/bottom_medium/male-2394718.jpg",
+          alt: `Pants ${selectedSize} 5`,
+          gender: "male",
+          size:"M",
+
+        },
+        
+        {
+          src: "/images/bottoms/medium/bottom_medium/people-2590092.jpg",
+          alt: `Pants ${selectedSize} 6`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/shorts-2604804.jpg",
+          alt: `Pants ${selectedSize} 7`,
+          gender: "male",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/skirt-2373505.jpg",
+          alt: `Pants ${selectedSize} 8`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/skirt-2373506.jpg",
+          alt: `Pants ${selectedSize} 9`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/skirt-5052288.jpg",
+          alt: `Pants ${selectedSize} 10`,
+          gender: "female",
+          size:"M",
+
+        },
+
+        {
+          src: "/images/bottoms/medium/bottom_medium/skirt-5205685.jpg",
+          alt: `Pants ${selectedSize} 11`,
+          gender: "female",
+          size:"M",
+
+        },
+        
+        {
+          src: "/images/bottoms/large/bottom_large/bag-1850053.jpg",
+          alt: `Pants ${selectedSize} 12`,
+          gender: "male",
+          size:"L",
+
+        },
+
+
+          
+        {
+          src: "/images/bottoms/large/bottom_large/blue-8046204.jpg",
+          alt: `Pants ${selectedSize} 14`,
+          gender: "female",
+          size:"L",
+
+        },
+
+           
+        {
+          src: "/images/bottoms/large/bottom_large/denim-8046202.jpg",
+          alt: `Pants ${selectedSize} 15`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/girl-7356367.jpg",
+          alt: `Pants ${selectedSize} 16`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/ladies-7401763.jpg",
+          alt: `Pants ${selectedSize} 17`,
+          gender: "female",
+          size:"L",
+
+        },
+       
+        {
+          src: "/images/bottoms/large/bottom_large/pants-3737400.jpg",
+          alt: `Pants ${selectedSize} 18`,
+          gender: "male",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/skirt-775217.jpg",
+          alt: `Pants ${selectedSize} 19`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/skirt-8046175.jpg",
+          alt: `Pants ${selectedSize} 20`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/woman-6390868.jpg",
+          alt: `Pants ${selectedSize} 21`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/large/bottom_large/young-woman-7080206.jpg",
+          alt: `Pants ${selectedSize} 22`,
+          gender: "female",
+          size:"L",
+
+        },
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-gustavo-fring-8770421.jpg",
+          alt: `Pants ${selectedSize} 23`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-jayb-6766168.jpg",
+          alt: `Pants ${selectedSize} 24`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-julia-larson-6456227.jpg",
+          alt: `Pants ${selectedSize} 25`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-laura-tancredi-7065267.jpg",
+          alt: `Pants ${selectedSize} 26`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-laura-tancredi-7065308.jpg",
+          alt: `Pants ${selectedSize} 27`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+
+        
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-mart-production-8433480.jpg",
+          alt: `Pants ${selectedSize} 28`,
+          gender: "female",
+          size:"XL",
+
+        },
+        
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-mart-production-8846281.jpg",
+          alt: `Pants ${selectedSize} 29`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+         
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-polina-tankilevitch-8539202.jpg",
+          alt: `Pants ${selectedSize} 30`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-rdne-7240201.jpg",
+          alt: `Pants ${selectedSize} 31`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+        
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-rdne-7240209.jpg",
+          alt: `Pants ${selectedSize} 32`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+          
+        {
+          src: "/images/bottoms/xl/bottom_xl/pexels-rdne-7240260.jpg",
+          alt: `Pants ${selectedSize} 33`,
+          gender: "female",
+          size:"XL",
+
+        },
+
+      ];
+      Bottoms
+      .filter(
+          (item) => selectedGender === "all" || (item.gender === selectedGender && item.size === selectedSize)
+        )
+        .forEach((item) => {
+          pantsRow.innerHTML += `<div class="clothing-item"><img src="${item.src}" alt="${item.alt}"><p>${item.alt}</p></div>`;
+        });
+
+      // Load jackets based on size and gender
+      const Dresses = [
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2017/04/16/01/53/woman-2233820_1280.jpg",
+        //   alt: `Jacket ${selectedSize} 1`,
+        //   gender: "female",
+        // },
+        // {
+        //   src: "https://cdn.pixabay.com/photo/2023/10/04/21/57/ai-generated-8294539_1280.jpg",
+        //   alt: `Jacket ${selectedSize} 2`,
+        //   gender: "male",
+        // },
+
+        {
+           src:"/images/dresses/small/dress_small/ao-dai-6152101.jpg",
+          alt:`Dress ${selectedSize}1`,
+          gender:"female",
+          size:"S",
+        },
+
+        {
+           src:"/images/dresses/small/dress_small/ao-dai-6182846.jpg",
+          alt:`Dress ${selectedSize}2`,
+          gender:"female",
+          size:"S",
+        },
+
+        {
+           src:"/images/dresses/small/dress_small/girl-3559538.jpg",
+          alt:`Dress ${selectedSize}3`,
+          gender:"female",
+          size:"S",
+        },
+
+        {
+           src:"/images/dresses/small/dress_small/woman-716592.jpg",
+          alt:`Dresse ${selectedSize}4`,
+          gender:"female",
+          size:"S",
+        },
+
+        {
+           src:"/images/dresses/small/dress_small/woman-6494461.jpg",
+          alt:`Dress ${selectedSize}5`,
+          gender:"female",
+          size:"S",
+        },
+        
+        
+        {
+           src:"/images/dresses/small/dress_small/woman-6626615.jpg",
+          alt:`Dress ${selectedSize}6`,
+          gender:"female",
+          size:"S",
+        },
+
+
+        {
+           src:"/images/dresses/small/dress_small/woman-7669649.jpg",
+          alt:`Dress ${selectedSize}7`,
+          gender:"female",
+          size:"S",
+        },
+        
+        
+        {
+           src:"/images/dresses/medium/dress_medium/woman-1486242.jpg",
+          alt:`Dress ${selectedSize}8`,
+          gender:"female",
+          size:"M",
+        },
+
+
+         
+        {
+           src:"/images/dresses/medium/dress_medium/woman-5287552.jpg",
+          alt:`Dress ${selectedSize}9`,
+          gender:"female",
+          size:"M",
+        },
+
+
+          
+        {
+           src:"/images/dresses/medium/dress_medium/woman-5355744.jpg",
+          alt:`Dress ${selectedSize}10`,
+          gender:"female",
+          size:"M",
+        },
+
+        {
+           src:"/images/dresses/medium/dress_medium/woman-6670772.jpg",
+          alt:`Dress ${selectedSize}11`,
+          gender:"female",
+          size:"M",
+        },
+
+        {
+           src:"/images/dresses/medium/dress_medium/woman-7633843.jpg",
+          alt:`Dress ${selectedSize}12`,
+          gender:"female",
+          size:"M",
+        },
+
+        {
+           src:"/images/dresses/medium/dress_medium/woman-8030684.jpg",
+          alt:`Dress ${selectedSize}13`,
+          gender:"female",
+          size:"M",
+        },
+
+        
+        {
+           src:"/images/dresses/medium/dress_medium/woman-8602128.png",
+          alt:`Dress ${selectedSize}14`,
+          gender:"female",
+          size:"M",
+        },
+
+         
+        {
+           src:"/images/dresses/large/dress_large/bride-7324810.jpg",
+          alt:`Dress ${selectedSize}15`,
+          gender:"female",
+          size:"L",
+        },
+
+        {
+           src:"/images/dresses/large/dress_large/fashion-3083861.jpg",
+          alt:`Dress ${selectedSize}16`,
+          gender:"female",
+          size:"L",
+        },
+
+        {
+           src:"/images/dresses/large/dress_large/girl-1333640.jpg",
+          alt:`Dress ${selectedSize}17`,
+          gender:"female",
+          size:"L",
+        },
+
+        
+        {
+           src:"/images/dresses/large/dress_large/mehndi-designs-1745048.jpg",
+          alt:`Dress ${selectedSize}17`,
+          gender:"female",
+          size:"L",
+        },
+
+          
+        {
+           src:"/images/dresses/large/dress_large/portrait-5534757.jpg",
+          alt:`Dress ${selectedSize}18`,
+          gender:"female",
+          size:"L",
+        },
+
+            
+        {
+           src:"/images/dresses/large/dress_large/vietnamese-woman-7404948.jpg",
+          alt:`Dress ${selectedSize}19`,
+          gender:"female",
+          size:"L",
+        },
+        
+              
+        {
+           src:"/images/dresses/large/dress_large/woman-939996.jpg",
+          alt:`Dress ${selectedSize}20`,
+          gender:"female",
+          size:"L",
+        },
+
+               
+        {
+           src:"/images/dresses/large/dress_large/woman-1338994.jpg",
+          alt:`Dress ${selectedSize}21`,
+          gender:"female",
+          size:"L",
+        },
+
+                
+        {
+           src:"https://cdn.pixabay.com/photo/2019/12/15/10/06/groom-4696727_1280.jpg",
+          alt:`Dress ${selectedSize}22`,
+          gender:"male",
+          size:"L",
+        },
+
+                  
+        {
+           src:"https://cdn.pixabay.com/photo/2019/10/22/13/43/man-4568761_1280.jpg",
+          alt:`Dress ${selectedSize}23`,
+          gender:"male",
+          size:"M",
+        },
+
+        {
+           src:"https://cdn.pixabay.com/photo/2016/08/23/04/43/man-1613566_1280.jpg",
+          alt:`Dress ${selectedSize}24`,
+          gender:"male",
+          size:"S",
+        },
+
+        {
+           src:" https://cdn.pixabay.com/photo/2023/08/01/18/52/man-8163600_1280.jpg",
+          alt:`Dress ${selectedSize}25`,
+          gender:"male",
+          size:"L",
+        },
+
+        
+        {
+           src:"https://cdn.pixabay.com/photo/2016/03/15/11/26/lady-1258039_1280.jpg",
+          alt:`Dress ${selectedSize}26`,
+          gender:"female",
+          size:"L",
+        },
+          
+        {
+           src:"  https://cdn.pixabay.com/photo/2015/06/11/11/39/thobe-805762_1280.jpg",
+          alt:`Dress ${selectedSize}27`,
+          gender:"male",
+          size:"L",
+        },
+
+
+        {
+           src:"/images/dresses/xl/dress_xl/clothes-1480150.jpg",
+          alt:`Dress ${selectedSize}29`,
+          gender:"female",
+          size:"XL",
+        },
+
+        
+        {
+           src:"/images/dresses/xl/dress_xl/clothes-1480152.jpg",
+          alt:`Dress ${selectedSize}30`,
+          gender:"female",
+          size:"XL",
+        },
+
+           
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-cottonbro-5655056.jpg",
+          alt:`Dress ${selectedSize}31`,
+          gender:"female",
+          size:"XL",
+        },
+
+             
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-dijanynni-kiratza-235375981-12676170.jpg",
+          alt:`Dress ${selectedSize}32`,
+          gender:"female",
+          size:"XL",
+        },
+
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-jeff-denlea-721292-5713668.jpg",
+          alt:`Dress ${selectedSize}33`,
+          gender:"female",
+          size:"XL",
+        },
+
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-jenyzest-2395921.jpg",
+          alt:`Dress ${selectedSize}34`,
+          gender:"female",
+          size:"XL",
+        },
+
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-moy-caro-photographer-296475578-14756950.jpg",
+          alt:`Dress ${selectedSize}35`,
+          gender:"female",
+          size:"XL",
+        },
+
+        
+        {
+           src:"/images/dresses/xl/dress_xl/pexels-nomsoobiano-16360582.jpg",
+          alt:`Dress ${selectedSize}36`,
+          gender:"female",
+          size:"XL",
+        },
+
+        {
+           src:"https://cdn.pixabay.com/photo/2023/08/05/16/22/man-8171388_1280.jpg",
+          alt:`Dress ${selectedSize}37`,
+          gender:"male",
+          size:"XL",
+        },
+
+        {
+           src:" https://cdn.pixabay.com/photo/2023/03/09/20/43/man-7840866_1280.jpg",
+          alt:`Dress ${selectedSize}38`,
+          gender:"male",
+          size:"XL",
+        },
+
+        {
+           src:"https://images.pexels.com/photos/5378374/pexels-photo-5378374.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+          alt:`Dress ${selectedSize}39`,
+          gender:"male",
+          size:"XL",
+        },
+
+      ];
+      Dresses
+      .filter(
+          (item) => selectedGender === "all" || (item.gender === selectedGender && item.size === selectedSize)
+        )
+        .forEach((item) => {
+          jacketsRow.innerHTML += `<div class="clothing-item"><img src="${item.src}" alt="${item.alt}"><p>${item.alt}</p></div>`;
+        });
+    }
+
+    // Load default items on page load
+    window.onload = function () {
+     
+      loadClothingItems();
+    };
+  </script>
+</body>
+
+</html>

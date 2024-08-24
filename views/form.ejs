@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+</head>
+<body>
+    <h1>Input Age, Height, Weight, and BMI</h1>
+    <form action="/" method="POST">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required><br><br>
+
+        <label for="height">Height (in cm):</label>
+        <input type="number" id="height" name="height" required><br><br>
+
+        <label for="weight">Weight (in kg):</label>
+        <input type="number" id="weight" name="weight" required><br><br>
+
+        <label for="bmi">BMI:</label>
+        <input type="number" id="bmi" name="bmi" step="0.01" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
